@@ -17,7 +17,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ValidationError
 
-from llm import MODEL, client
+from llm import MODEL, client, frage
 
 SYSTEM_PROMPT = (
     "Du ordnest Mails von Studierenden an die HTWG Konstanz ein. "
@@ -53,6 +53,9 @@ def einordnen(mail: str, versuche: int = 3) -> Anfrage:
     ]
     # TODO 1: Ruft das Modell auf. Wählt eine passende temperature
     #         und übergebt response_format=schema_von(Anfrage).
+    t = 0
+    prompt = "was geht ab?"
+    antwort =  frage(prompt, temperature=t, max_tokens=40)
     # TODO 2: Prüft die Antwort mit Anfrage.model_validate_json(...).
     # TODO 3: Schlägt die Prüfung fehl (ValidationError), versucht es
     #         erneut, höchstens `versuche`-mal. Gebt bei jedem
