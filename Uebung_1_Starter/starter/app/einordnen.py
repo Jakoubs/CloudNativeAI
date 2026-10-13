@@ -17,7 +17,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ValidationError
 
-from llm import MODEL, client, frage
+from llm import MODEL, client
 
 SYSTEM_PROMPT = (
     "Du ordnest Mails von Studierenden an die HTWG Konstanz ein. "
@@ -53,15 +53,29 @@ def einordnen(mail: str, versuche: int = 3) -> Anfrage:
     ]
     # TODO 1: Ruft das Modell auf. Wählt eine passende temperature
     #         und übergebt response_format=schema_von(Anfrage).
-    t = 0
-    prompt = "was geht ab?"
-    antwort =  frage(prompt, temperature=t, max_tokens=40)
+    antwort = client.chat.completions.create(
+        model=MODEL,
+        messages=nachricht,
+        temperature=0.0,
+        max_tokens=100,
+        response_format=schema_von(Anfrage),
+    )
+    # Beste ergebnisse da einheitlichere antowrten.
+    #print(f"Antwort: {antwort}")
     # TODO 2: Prüft die Antwort mit Anfrage.model_validate_json(...).
+    for r in range(3):
+        try:
+            valid = Anfrage.model_validate_json(antwort.choices[0].message.content)
+            print(f"valid in Versuch {r + 1} bei der Validierung: {valid}")
+            return valid
+        except ValidationError as e:
+            print(f"Fehler in Versuch {r + 1} bei der Validierung: {e}")
+
     # TODO 3: Schlägt die Prüfung fehl (ValidationError), versucht es
     #         erneut, höchstens `versuche`-mal. Gebt bei jedem
     #         Fehlversuch eine kurze Meldung aus. Klappt es gar
     #         nicht, werft einen RuntimeError.
-    raise NotImplementedError("TODO: einordnen() umsetzen")
+    # raise NotImplementedError("TODO: einordnen() umsetzen")
 
 
 def auswerten() -> None:
@@ -74,6 +88,12 @@ def auswerten() -> None:
         # TODO 4: Vergleicht ergebnis mit fall["erwartet"]. Zählt einen
         #         Fall als richtig, wenn das Anliegen stimmt. Gebt für
         #         jeden Fall Mail, Ergebnis und ✓ oder ✗ aus.
+        if(ergebnis.anliegen == fall["erwartet"]["anliegen"]):
+            print(f"✓ {fall["mail"]} {ergebnis}")
+            richtig += 1
+        else:
+            print(f"✗ {fall["mail"]} {ergebnis}")
+
     print(f"\n{richtig} von {len(faelle)} Anliegen richtig ({MODEL})")
 
 
