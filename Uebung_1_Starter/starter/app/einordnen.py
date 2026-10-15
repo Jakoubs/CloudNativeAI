@@ -53,12 +53,27 @@ def einordnen(mail: str, versuche: int = 3) -> Anfrage:
     ]
     # TODO 1: Ruft das Modell auf. Wählt eine passende temperature
     #         und übergebt response_format=schema_von(Anfrage).
+  
     # TODO 2: Prüft die Antwort mit Anfrage.model_validate_json(...).
+    for i in range (1, versuche +1):
+        antwort = client.chat.completions.create(
+                model=MODEL,
+                temperature = 0.0, #Temperature 0, da es immmer einheitliche Antworten gibt
+                messages=nachricht, 
+                response_format=schema_von(Anfrage)
+            )
+        try: 
+            valid = Anfrage.model_validate_json(antwort.choices[0].message.content)
+            print(f"Versuch {i} bei der Validierung ist valid: {valid}")
+            return valid
+        except ValidationError as e:
+            print(f"Fehler in Versuch {i} bei der Validierung: {e}")
     # TODO 3: Schlägt die Prüfung fehl (ValidationError), versucht es
     #         erneut, höchstens `versuche`-mal. Gebt bei jedem
     #         Fehlversuch eine kurze Meldung aus. Klappt es gar
     #         nicht, werft einen RuntimeError.
-    raise NotImplementedError("TODO: einordnen() umsetzen")
+
+    raise RuntimeError(f"Nur ungültige Versuche nach {versuche} Versuchen")
 
 
 def auswerten() -> None:
@@ -71,6 +86,15 @@ def auswerten() -> None:
         # TODO 4: Vergleicht ergebnis mit fall["erwartet"]. Zählt einen
         #         Fall als richtig, wenn das Anliegen stimmt. Gebt für
         #         jeden Fall Mail, Ergebnis und ✓ oder ✗ aus.
+        if(ergebnis.anliegen == fall["erwartet"]["anliegen"]):
+            print(f"{fall["mail"]} {ergebnis} ✓")
+            richtig +=1
+        else: 
+            print((f"{fall["mail"]} {ergebnis} ✗"))
+    
+
+           
+
     print(f"\n{richtig} von {len(faelle)} Anliegen richtig ({MODEL})")
 
 
