@@ -63,6 +63,7 @@ def einordnen(mail: str, versuche: int = 3) -> Anfrage:
                 response_format=schema_von(Anfrage)
             )
         try: 
+            #print("ROH:", antwort.choices[0].message.content)
             valid = Anfrage.model_validate_json(antwort.choices[0].message.content)
             print(f"Versuch {i} bei der Validierung ist valid: {valid}")
             return valid
