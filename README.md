@@ -271,3 +271,6 @@ docker compose run --rm app hallo_llm.py "Wie melde ich mich zu einer Prüfung a
 
 
 # Zusatzaufgabe
+Alle *3 Felder* richtig geprüft und *frist enthalten*
+lama -> 3/8 
+quen -> 0/8
