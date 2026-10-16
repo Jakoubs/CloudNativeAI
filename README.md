@@ -252,6 +252,22 @@ immer unterschiedliche antowrten und vormate. Keine klassifizierung möglich
 was könntet ihr ändern -> garnichts. LLM immer zufällige nicht genormte antowrten wenn kein format definiert ist.ö
 
 # 5 
+Jakob Steiner 311939
+Jana Dölz 310506
+
+.env
+LLM_BASE_URL=http://ollama:11434/v1
+LLM_MODEL=llama3.2:3b
+
+```sh
+docker compose run --rm app hallo_llm.py "Wie melde ich mich zu einer Prüfung an?"
+```
+
+# Reflexion
+1. Einheitliche schnittstelle und API keys privat halten
+2. 0 -> einheitlich möglichst deterministisches verhalten
+3. Die Struktur wird garantiert, der Inhalt nicht
+4. lokal -> simple aufgaben bei standart hardware und firmeninterne datensicherheit wird gewärleistet. Cloud dienst -> logisch komplexere und nicht sicherehitsrelevante daten
 
 
 # Zusatzaufgabe
