@@ -23,7 +23,7 @@ SYSTEM_PROMPT = (
     "Du ordnest Mails von Studierenden an die HTWG Konstanz ein. "
     "Antworte ausschließlich mit JSON. "
     "anliegen ist pruefung, mensa, bibliothek oder sonstiges. "
-S    "studiengang ist das Kürzel (z. B. AIN, WIN, MSI) oder null. "
+    "studiengang ist das Kürzel (z. B. AIN, WIN, MSI) oder null. "
     "frist ist die Frist aus der Mail, so wie sie dort steht, oder null."
 )
 
