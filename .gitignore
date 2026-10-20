@@ -1,3 +1,5 @@
 .continue/
 Uebung_1_Starter/starter/.env
-
+.env 
+.DS_Store
+__pycache__/
