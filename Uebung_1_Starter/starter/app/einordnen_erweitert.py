@@ -72,9 +72,10 @@ def einordnen(mail: str, versuche: int = 3) -> Anfrage:
     for r in range(3):
         try:
             valid = Anfrage.model_validate_json(antwort.choices[0].message.content)
-            frist = valid.frist[1]
+            frist = valid.frist
             if(frist != None and frist not in mail):
-                valid.frist[1] = None
+                print(f"Frist war nicht in der mail: {frist}--------------------------------------------------------------------------")
+                valid.frist = None
             print(f"valid in Versuch {r + 1} bei der Validierung: {valid}")
             return valid
         except ValidationError as e:
