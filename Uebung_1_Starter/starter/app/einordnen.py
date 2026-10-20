@@ -15,7 +15,7 @@ import json
 import sys
 from typing import Literal
 
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ValidationError, field_validator
 
 from llm import MODEL, client
 
@@ -32,6 +32,12 @@ class Anfrage(BaseModel):
     anliegen: Literal["pruefung", "mensa", "bibliothek", "sonstiges"]
     studiengang: str | None
     frist: str | None
+
+    @field_validator('frist', 'studiengang', mode='before')
+    @classmethod
+    def check(cls, value: str | None) -> str | None:
+        if isinstance(value, str) and value.strip().lower() in ('null', 'none', ''):
+            return None
 
 
 def schema_von(modell: type[BaseModel]) -> dict:

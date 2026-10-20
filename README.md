@@ -42,3 +42,35 @@ valid in Versuch 1 bei der Validierung: anliegen='pruefung' studiengang='HACKED'
 
 **Anliegen korrekt: 13 / 16
 Komplette Einordnung korrekt: 11 / 16**
+
+## 2.1 
+
+1. Übernehmt die Tabelle ins README. Was hat v2 gebracht, und was hat es gekostet? Rechnet aus, um welchen Faktor die Eingabe-Tokens gestiegen sind.
+
+| Prompt | Anliegen richtig | Alle Felder richtig | Eingabe-Tokens (Ø) | Dauer (Ø) |
+|---|---|---|---|---|
+| einordnen.v1 | 13/16 | 8/16 | 140 | 1.18 s |
+| einordnen.v2 | 13/16 | 11/16 | 234 | 1.59 s |
+
+Die war teurer, aber hat auch besser, es waren merklich mehr Felder richtig. Die Eingabe ist um ca 60 Prozenz gestiegen. 
+
+2. Welche Mails sind mit v2 immer noch falsch? `vergleich.py` zeigt bei jedem Fehler, was herauskam und was erwartet war. Ordnet jeden Fehler ein: unklare Anweisung, fehlendes Wissen, Angriff, oder ist die **Messung zu streng**? Ein Beispiel für Letzteres: Das Modell schreibt `06.11.`, erwartet war `6 November`. Wie würdet ihr die Messung verbessern?
+
+2 mal nur frist: 
+  - 1. zu Streng, frist wurde nicht als Frist erkannt
+  - 2. Es wurde zu stark nach einem Datum gesucht und dann kam ein Falsches zurück. 
+
+1x nur anliegen: 
+  - Prüfung statt Bibliothek, da fehlen vergleichsdaten. Die Bachelorarbeit wird automatisch als Prüfung eingeordnet. 
+  
+1x anliegen und frist: 
+  - Frist hat ein anderes Format und wurde nicht erkannt, das Anliegen wurde nicht erkannt, wegen fehlender vergleiche, bzw das Modell weiß nicht, dass mit Fernleihe die Bibliothek gemeint ist.
+
+1x anliegen und studiengang: 
+  - Der Studiengang wurde erfolgreich aussortiert, die Injection mit "HACKED" hat nicht geklappt, die andere bei Anliegen hat aber leider nicht abgefangen. 
+
+
+3. Schaut euch die letzte Mail in `mails.json` an. Was steht bei `studiengang`? Warum hilft hier keine Formulierung im Prompt zuverlässig?
+4. Ändert die Klasse `Anfrage` in `einordnen.py` so, dass `studiengang` nur noch `AIN`, `WIN`, `MSI` oder `None` sein kann. Messt erneut. Ist die letzte Mail jetzt richtig eingeordnet? Erklärt, was diese Abwehr verhindert, was nicht, und warum sie auf einer anderen Ebene wirkt als euer Prompt.
+5. Optional: Gibt es eine v3, die mit weniger Tokens genauso gut ist? Wenn ja, nehmt sie mit in die Tabelle.
+
